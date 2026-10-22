@@ -1,0 +1,55 @@
+// Power BI measures for the Nigeria Cost-of-Living Tracker.
+// Model: dim_date[date] 1-* fact_cpi_monthly[date]; dim_series[series] 1-* fact_cpi_monthly[series].
+// Mark dim_date as the date table. Slicers: geography, series.
+
+Latest Date = CALCULATE ( MAX ( fact_cpi_monthly[date] ), ALL ( dim_date ) )
+
+Index = AVERAGE ( fact_cpi_monthly[index_value] )
+
+YoY % =
+    DIVIDE (
+        [Index] - CALCULATE ( [Index], DATEADD ( dim_date[date], -12, MONTH ) ),
+        CALCULATE ( [Index], DATEADD ( dim_date[date], -12, MONTH ) )
+    )
+
+MoM % =
+    DIVIDE (
+        [Index] - CALCULATE ( [Index], DATEADD ( dim_date[date], -1, MONTH ) ),
+        CALCULATE ( [Index], DATEADD ( dim_date[date], -1, MONTH ) )
+    )
+
+// Headline cards (all-items, national) for the latest month
+Headline YoY (latest) =
+    CALCULATE ( [YoY %], fact_cpi_monthly[series] = "All Items", fact_cpi_monthly[geography] = "National",
+                dim_date[date] = [Latest Date] )
+
+Food YoY (latest) =
+    CALCULATE ( [YoY %], fact_cpi_monthly[series] = "Food", fact_cpi_monthly[geography] = "National",
+                dim_date[date] = [Latest Date] )
+
+// Purchasing power: what a naira at a chosen month buys today
+Purchasing Power Retained % =
+VAR StartDate = SELECTEDVALUE ( dim_date[date] )
+VAR StartIdx =
+    CALCULATE ( [Index], fact_cpi_monthly[series] = "All Items", fact_cpi_monthly[geography] = "National" )
+VAR NowIdx =
+    CALCULATE ( [Index], fact_cpi_monthly[series] = "All Items", fact_cpi_monthly[geography] = "National",
+                dim_date[date] = [Latest Date], ALL ( dim_date ) )
+RETURN DIVIDE ( StartIdx, NowIdx )
+
+// What-if parameter: Amount (NGN) = GENERATESERIES ( 10000, 500000, 5000 )
+Amount in Today's Naira =
+    SELECTEDVALUE ( 'Amount'[Amount Value], 100000 ) / [Purchasing Power Retained %]
+
+// Contribution to headline YoY, approximate (2024 basket weights, as in the Python analysis)
+Contribution pp =
+VAR W = SELECTEDVALUE ( dim_series[weight] )
+VAR Base = CALCULATE ( [Index], DATEADD ( dim_date[date], -12, MONTH ) )
+VAR Now = [Index]
+VAR AllBase =
+    SUMX ( FILTER ( ALL ( dim_series ), dim_series[series_group] = "Division" ),
+           dim_series[weight] * CALCULATE ( [Index], DATEADD ( dim_date[date], -12, MONTH ) ) )
+RETURN DIVIDE ( W * ( Now - Base ), AllBase ) * 100
+
+// Data-quality flag shown as a banner on the trend page
+January Dip Flag = IF ( CALCULATE ( MAX ( fact_cpi_monthly[january_dip_flag] ) ) = TRUE (), "Index dips in January (see README)", BLANK () )

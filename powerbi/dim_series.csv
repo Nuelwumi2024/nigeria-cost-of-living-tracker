@@ -1,0 +1,26 @@
+series,weight,label,series_group
+All Items,100.0,All Items,Headline
+All Items Less Farm Produce,73.41,All Items Less Farm Produce,Component
+Core Index (All Items Less Farm Produce And Energy),66.99,Core Index (All Items Less Farm Produce And Energy),Component
+Imported Food,17.33,Imported Food,Component
+Food,27.98,Food,Component
+Farm Produce,26.61,Farm Produce,Component
+Energy,6.42,Energy,Component
+Services,37.55,Services,Component
+Goods,62.48,Goods,Component
+ALL ITEMS LESS FOOD (NONFOOD INDEX),72.02,ALL ITEMS LESS FOOD (NONFOOD INDEX),Other
+ALLITEMS LESS FOOD AND NON ALCOHOLIC BEVERAGES INDEX,60.08,ALLITEMS LESS FOOD AND NON ALCOHOLIC BEVERAGES INDEX,Other
+HOUSING (RENT) INDEX,4.23,HOUSING (RENT) INDEX,Other
+Food And Non-Alcoholic Beverages,40.02,Food & beverages,Division
+"Alcoholic Beverages, Tobacco And Narcotics",0.37,Alcohol & tobacco,Division
+Clothing And Footwear,5.04,Clothing,Division
+"Housing, Water, Electricity, Gas And Other Fuels",8.42,Housing & utilities,Division
+"Furnishings, Household Equipment And Routine Household Maintenance",2.96,Household goods,Division
+Health.,6.06,Health,Division
+Transport,10.66,Transport,Division
+Information And Communication,3.29,Communication,Division
+"Recreation, Sport And Culture",0.31,Recreation,Division
+Education Services,6.2,Education,Division
+Restaurants And Accomodation Services,12.92,Restaurants & hotels,Division
+Insurance and Financial Services,0.47,Insurance & finance,Division
+"Personal Care, Social Protection And Miscellaneous Goods And Services",3.29,Personal care & misc,Division
